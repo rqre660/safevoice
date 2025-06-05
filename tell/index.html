@@ -1,0 +1,33 @@
+<!-- /tell/index.html -->
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>SafeVoice - 訴說者</title>
+</head>
+<body>
+  <h1>我是訴說者</h1>
+  <textarea id="userInput" placeholder="請在此輸入想訴說的內容..." rows="8" cols="40"></textarea><br>
+  <button onclick="anonymize()">送出</button>
+
+  <h2>匿名化結果：</h2>
+  <pre id="result">（結果會顯示在這裡）</pre>
+
+  <script>
+    async function anonymize() {
+      const text = document.getElementById("userInput").value;
+
+      const response = await fetch("https://openai-anonymizer-api.vercel.app/api/anonymize", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ text })
+      });
+
+      const data = await response.json();
+      document.getElementById("result").textContent = data.anonymized || data.error || "發生錯誤";
+    }
+  </script>
+</body>
+</html>
