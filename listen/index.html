@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>SafeVoice - 傾聽者</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2em;
+    }
+    .message {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 1em;
+      margin-bottom: 1em;
+    }
+  </style>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // 🔐 前端 Firebase 設定填入這裡：
+    const firebaseConfig = {
+      apiKey: "AIzaSyAJmqx46IjdEZXYwZsuYbMz5d5853pkpOw",
+      authDomain: "safevoice-project.firebaseapp.com",
+      projectId: "safevoice-project",
+      storageBucket: "safevoice-project.firebasestorage.app",
+      messagingSenderId: "538076072032",
+      appId: "1:538076072032:web:0dc596c6ec5fb9e1589b05",
+      measurementId: "G-LK3V40W75Q"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function fetchRandomMessage() {
+      const display = document.getElementById("display");
+      display.innerHTML = "載入中...";
+
+      try {
+        const snapshot = await getDocs(collection(db, "messages"));
+        const docs = snapshot.docs;
+
+        if (docs.length === 0) {
+          display.innerHTML = "<p>目前尚無任何匿名留言。</p>";
+          return;
+        }
+
+        const randomDoc = docs[Math.floor(Math.random() * docs.length)];
+        const data = randomDoc.data();
+
+        display.innerHTML = `
+          <div class="message">
+            <p>${data.anonymized}</p>
+            <small>${new Date(data.timestamp).toLocaleString()}</small>
+          </div>
+        `;
+      } catch (err) {
+        console.error("讀取失敗：", err);
+        display.innerHTML = "<p style='color:red;'>讀取留言時發生錯誤。</p>";
+      }
+    }
+
+    window.onload = () => {
+      fetchRandomMessage();
+      document.getElementById("nextBtn").addEventListener("click", fetchRandomMessage);
+    };
+  </script>
+</head>
+<body>
+  <h1>🌿 傾聽者專區</h1>
+  <div id="display">載入中...</div>
+  <button id="nextBtn">🔄 再聽一則</button>
+</body>
+</html>
