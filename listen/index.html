@@ -8,25 +8,34 @@
       box-sizing: border-box;
     }
     body {
-      font-family: sans-serif;
+      font-family: "Noto Sans TC", sans-serif;
       margin: 0;
       padding: 2em;
-      background-color: #f5f5f5;
+      background-image: url('background_green_woman.png'); /* ← 圖片檔名與位置 */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
     }
+
     .container {
       max-width: 720px;
       margin: auto;
-      background: white;
+      background: rgba(255, 255, 255, 0.85);
       padding: 2em;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      text-align: center;
     }
+
     .message {
       border: 1px solid #ccc;
       border-radius: 8px;
       padding: 1em;
       margin-bottom: 1em;
+      background-color: #fafafa;
     }
+
     button {
       padding: 0.5em 1em;
       font-size: 1em;
@@ -35,6 +44,7 @@
       background-color: #f0f0f0;
       cursor: pointer;
     }
+
     button:hover {
       background-color: #e0e0e0;
     }
