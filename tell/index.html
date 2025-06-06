@@ -1,32 +1,90 @@
-<!-- /tell/index.html -->
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
   <title>SafeVoice - 訴說者</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: sans-serif;
+      background-color: #f5f5f5;
+      padding: 2em;
+      margin: 0;
+    }
+    .container {
+      max-width: 720px;
+      margin: auto;
+      background: white;
+      padding: 2em;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    textarea {
+      width: 100%;
+      font-size: 1em;
+      padding: 1em;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      resize: vertical;
+    }
+    button {
+      margin-top: 1em;
+      padding: 0.6em 1.2em;
+      font-size: 1em;
+      border-radius: 6px;
+      border: 1px solid #888;
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #e0e0e0;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    #resultBox {
+      margin-top: 2em;
+      padding: 1em;
+      background-color: #fafafa;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
 <body>
-  <h1>我是訴說者</h1>
-  <textarea id="userInput" placeholder="請在此輸入想訴說的內容..." rows="8" cols="40"></textarea><br>
-  <button onclick="anonymize()">送出</button>
+  <div class="container">
+    <h1>🗣️ 我是訴說者</h1>
+    <textarea id="userInput" placeholder="請在此輸入想訴說的內容..." rows="8"></textarea><br>
+    <button onclick="anonymize()">送出</button>
 
-  <h2>匿名化結果：</h2>
-  <pre id="result">（結果會顯示在這裡）</pre>
+    <h2>匿名化結果：</h2>
+    <div id="resultBox">（結果會顯示在這裡）</div>
+  </div>
 
   <script>
     async function anonymize() {
       const text = document.getElementById("userInput").value;
+      const resultBox = document.getElementById("resultBox");
+      resultBox.textContent = "處理中...";
 
-      const response = await fetch("https://openai-anonymizer-api.vercel.app/api/anonymize", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ text })
-      });
+      try {
+        const response = await fetch("https://openai-anonymizer-api.vercel.app/api/anonymize", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ text })
+        });
 
-      const data = await response.json();
-      document.getElementById("result").textContent = data.anonymized || data.error || "發生錯誤";
+        const data = await response.json();
+        resultBox.textContent = data.anonymized || data.error || "發生錯誤";
+      } catch (err) {
+        resultBox.textContent = "⚠️ 發生錯誤，請稍後再試";
+        console.error(err);
+      }
     }
   </script>
 </body>
